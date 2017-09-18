@@ -1,4 +1,3 @@
-
 CaseControl = function(GEOobject){
   Comparisons<-pData(phenoData(GEOobject))$`genotype/variation`
  

@@ -49,7 +49,7 @@ fit2 <- eBayes(fit2, 0.01)
 tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
-write.table(tT, file="ResultsNoAge/Tg4510DN.csv", row.names=F, sep=",")
+write.table(tT, file="ResultsNoAge/Tg4510DN_NoAge.csv", row.names=F, sep=",")
 
   
 # ################################################################

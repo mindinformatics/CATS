@@ -1,22 +1,22 @@
 # Testing Download Code
 source('~/Desktop/MousePipeline/Code/Download.R')
-
 setwd('~/Desktop/MousePipeline/Download/')
 
 # clear all the files
 system(command = "./remove.sh")
 
 # all current datasets 
+GEOtag = "GSE25926"
+
 Aydin = DownloadFunction("GSE25926")
 Aydin = DownloadFirstElement("GSE25926")
-
 
 Tsai = DownloadFunction("GSE65159")
 
 ########################################################################
 
-# Barres has multipule platforms
-Bares = DownloadFunction("GSE9566")
+# Barres has multiple platforms
+Barres = DownloadFirstElement("GSE9566")
 
 GEOtag = "GSE9566"
 

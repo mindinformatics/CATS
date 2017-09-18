@@ -1,6 +1,6 @@
 # Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Fri Sep 15 11:25:55 EDT 2017
-setwd("~/Desktop/CATS/GEO2R/Aydin/")
+# R scripts generated  Fri Sep 15 12:19:08 EDT 2017
+setwd("~/Desktop/CATS/GEO2R/GSE56772_BMS/")
 ################################################################
 #   Differential expression analysis with limma
 library(Biobase)
@@ -9,15 +9,16 @@ library(limma)
 
 # load series and platform data from GEO
 
-gset <- getGEO("GSE25926", GSEMatrix =TRUE, AnnotGPL=TRUE,  destdir = "Data/")
-if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
+gset <- getGEO("GSE56772", GSEMatrix =TRUE, AnnotGPL=TRUE, destdir = "Data/")
+if (length(gset) > 1) idx <- grep("GPL8759", attr(gset, "names")) else idx <- 1
 gset <- gset[[idx]]
 
 # make proper column names to match toptable 
 fvarLabels(gset) <- make.names(fvarLabels(gset))
 
 # group names for all samples
-gsms <- "000111XXXXXXXXX"
+gsms <- paste0("0000000000000000000000000XXXXXXXXXXXXXXXXXXXXXXXXX",
+               "X1111111111111111111111111")
 sml <- c()
 for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 
@@ -30,10 +31,10 @@ gset <- gset[ ,sel]
 ex <- exprs(gset)
 qx <- as.numeric(quantile(ex, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
 LogC <- (qx[5] > 100) ||
-          (qx[6]-qx[1] > 50 && qx[2] > 0) ||
-          (qx[2] > 0 && qx[2] < 1 && qx[4] > 1 && qx[4] < 2)
+  (qx[6]-qx[1] > 50 && qx[2] > 0) ||
+  (qx[2] > 0 && qx[2] < 1 && qx[4] > 1 && qx[4] < 2)
 if (LogC) { ex[which(ex <= 0)] <- NaN
-  exprs(gset) <- log2(ex) }
+exprs(gset) <- log2(ex) }
 
 # set up the data and proceed with analysis
 sml <- paste("G", sml, sep="")    # set group names
@@ -48,8 +49,7 @@ fit2 <- eBayes(fit2, 0.01)
 tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
-write.table(tT, file="Results/GSE25926_Aydin_APPkovsWT.csv", row.names=F, sep=",")
-
+write.table(tT, file="ResultsNoAge/ttAloneDDN_NoAge.csv", row.names=F, sep=",")
 
 # ################################################################
 # #   Boxplot for selected GEO samples
@@ -58,12 +58,13 @@ write.table(tT, file="Results/GSE25926_Aydin_APPkovsWT.csv", row.names=F, sep=",
 # 
 # # load series and platform data from GEO
 # 
-# gset <- getGEO("GSE25926", GSEMatrix =TRUE, getGPL=FALSE)
-# if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
+# gset <- getGEO("GSE56772", GSEMatrix =TRUE, getGPL=FALSE)
+# if (length(gset) > 1) idx <- grep("GPL8759", attr(gset, "names")) else idx <- 1
 # gset <- gset[[idx]]
 # 
 # # group names for all samples in a series
-# gsms <- "000111XXXXXXXXX"
+# gsms <- paste0("0000000000000000000000000XXXXXXXXXXXXXXXXXXXXXXXXX",
+#                "X1111111111111111111111111")
 # sml <- c()
 # for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 # sml <- paste("G", sml, sep="")  set group names
@@ -83,6 +84,6 @@ write.table(tT, file="Results/GSE25926_Aydin_APPkovsWT.csv", row.names=F, sep=",
 # palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
 # dev.new(width=4+dim(gset)[[2]]/5, height=6)
 # par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
-# title <- paste ("GSE25926", '/', annotation(gset), " selected samples", sep ='')
+# title <- paste ("GSE56772", '/', annotation(gset), " selected samples", sep ='')
 # boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
 # legend("topleft", labels, fill=palette(), bty="n")

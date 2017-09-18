@@ -3,5 +3,7 @@ rm GSE*
 rm GPL*
 
 # set Datasets.csv to the column names
-head -1 Datasets.csv > Datasets.csv
+head -1 Datasets.csv > DatasetsCopy.csv
+rm Datasets.csv
+mv DatasetsCopy.csv Datasets.csv
 
