@@ -46,7 +46,7 @@ fit2 <- eBayes(fit2, 0.01)
 tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","GB_LIST","SPOT_ID","RANGE_GB","RANGE_STRAND","RANGE_START"))
-write.table(tT, file="GPL6096 Results/GSE9566_Barres_AstrosAll.csv", row.names=F, sep=",")
+write.table(tT, file="Results/GSE9566_Barres_Astrocytes.csv", row.names=F, sep=",")
 
 
 # ################################################################

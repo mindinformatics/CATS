@@ -1,9 +1,10 @@
-# Cases: 2 Cultured Astroglia
-# Controls: 8 (Neurons, 12day postnatal cultured Astroglia, 
+# Cases: 9 (Cultured Astroglia, Astroglia FACS ALL, Astroglia FACS Pos)
+# Controls: 29 (Neurons, Astrocytes, MOG, Oligodendrocytes,OPCs)
+setwd("~/Desktop/CATS/GEO2R/GSE9566_Barres/GPL1261/")
 
 # Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Fri Sep 15 14:40:35 EDT 2017
-setwd("~/Desktop/CATS/GEO2R/GSE9566_Barres/")
+# R scripts generated  Mon Sep 18 11:14:39 EDT 2017
+
 ################################################################
 #   Differential expression analysis with limma
 library(Biobase)
@@ -12,15 +13,15 @@ library(limma)
 
 # load series and platform data from GEO
 
-gset <- getGEO("GSE9566", GSEMatrix =TRUE, AnnotGPL=FALSE)
-if (length(gset) > 1) idx <- grep("GPL6096", attr(gset, "names")) else idx <- 1
+gset <- getGEO("GSE9566", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
 gset <- gset[[idx]]
 
 # make proper column names to match toptable 
 fvarLabels(gset) <- make.names(fvarLabels(gset))
 
 # group names for all samples
-gsms <- "0010100000"
+gsms <- "11111111111111110001000101111111110011"
 sml <- c()
 for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 
@@ -45,8 +46,8 @@ fit2 <- contrasts.fit(fit, cont.matrix)
 fit2 <- eBayes(fit2, 0.01)
 tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
-tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","GB_LIST","SPOT_ID","RANGE_GB","RANGE_STRAND","RANGE_START"))
-write.table(tT, file="GPL6096 Results/GSE9566_Barres_CultAstroglia.csv", row.names=F, sep=",")
+tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
+write.table(tT, file = "Results/GSE9566_Barres_Astroglia.csv", row.names=F, sep=",")
 
 
 # ################################################################
@@ -57,11 +58,11 @@ write.table(tT, file="GPL6096 Results/GSE9566_Barres_CultAstroglia.csv", row.nam
 # # load series and platform data from GEO
 # 
 # gset <- getGEO("GSE9566", GSEMatrix =TRUE, getGPL=FALSE)
-# if (length(gset) > 1) idx <- grep("GPL6096", attr(gset, "names")) else idx <- 1
+# if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
 # gset <- gset[[idx]]
 # 
 # # group names for all samples in a series
-# gsms <- "0010100000"
+# gsms <- "11111111111111110001000101111111110011"
 # sml <- c()
 # for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 # sml <- paste("G", sml, sep="")  set group names
@@ -70,7 +71,7 @@ write.table(tT, file="GPL6096 Results/GSE9566_Barres_CultAstroglia.csv", row.nam
 # ex <- exprs(gset)[ , order(sml)]
 # sml <- sml[order(sml)]
 # fl <- as.factor(sml)
-# labels <- c("Control","Case")
+# labels <- c("Case","Control")
 # 
 # # set parameters and draw the plot
 # palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
