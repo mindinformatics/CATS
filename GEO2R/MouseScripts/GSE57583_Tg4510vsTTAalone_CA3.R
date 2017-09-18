@@ -1,8 +1,10 @@
-#~10 month mice contrast ttaAlone vs DN 
+# control: 5 TTAalone CA3
+# case: 6 Tg4510 CA3
 
 # Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Fri Sep 15 12:45:33 EDT 2017
+# R scripts generated  Mon Sep 18 15:32:05 EDT 2017
 
+setwd("~/Desktop/CATS/GEO2R/GSE57583_BMS/")
 ################################################################
 #   Differential expression analysis with limma
 library(Biobase)
@@ -11,7 +13,7 @@ library(limma)
 
 # load series and platform data from GEO
 
-gset <- getGEO("GSE56772", GSEMatrix =TRUE, AnnotGPL=TRUE, destdir = "Data/")
+gset <- getGEO("GSE57583", GSEMatrix =TRUE, AnnotGPL=TRUE)
 if (length(gset) > 1) idx <- grep("GPL8759", attr(gset, "names")) else idx <- 1
 gset <- gset[[idx]]
 
@@ -19,8 +21,7 @@ gset <- gset[[idx]]
 fvarLabels(gset) <- make.names(fvarLabels(gset))
 
 # group names for all samples
-gsms <- paste0("XXXXXXXXXXXXXXXXXXXX00000XXXXXXXXXXXXXXXXXXXXXXXXX",
-               "XXXXXXXXXXXXXXXXXXXXX11111")
+gsms <- "XXXXXXXXXXXXXXXXXXXXXX111111XXXXXXXXXXX00000XXXXX"
 sml <- c()
 for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 
@@ -48,10 +49,10 @@ fit <- lmFit(gset, design)
 cont.matrix <- makeContrasts(G1-G0, levels=design)
 fit2 <- contrasts.fit(fit, cont.matrix)
 fit2 <- eBayes(fit2, 0.01)
-tT <- topTable(fit2, adjust="fdr", sort.by="B", number=250)
+tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
-write.table(tT, file="ResultsAgeStratified/ttaAloneDN_10months.csv", row.names=F, sep=",")
+write.table(tT, file="Results/GSE57583_Tg4510vsTTAalone_CA3.csv", row.names=F, sep=",")
 
 
 # ################################################################
@@ -61,13 +62,12 @@ write.table(tT, file="ResultsAgeStratified/ttaAloneDN_10months.csv", row.names=F
 # 
 # # load series and platform data from GEO
 # 
-# gset <- getGEO("GSE56772", GSEMatrix =TRUE, getGPL=FALSE)
+# gset <- getGEO("GSE57583", GSEMatrix =TRUE, getGPL=FALSE)
 # if (length(gset) > 1) idx <- grep("GPL8759", attr(gset, "names")) else idx <- 1
 # gset <- gset[[idx]]
 # 
 # # group names for all samples in a series
-# gsms <- paste0("XXXXXXXXXXXXXXXXXXXX00000XXXXXXXXXXXXXXXXXXXXXXXXX",
-#                "XXXXXXXXXXXXXXXXXXXXX11111")
+# gsms <- "XXXXXXXXXXXXXXXXXXXXXX111111XXXXXXXXXXX00000XXXXX"
 # sml <- c()
 # for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
 # sml <- paste("G", sml, sep="")  set group names
@@ -87,6 +87,6 @@ write.table(tT, file="ResultsAgeStratified/ttaAloneDN_10months.csv", row.names=F
 # palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
 # dev.new(width=4+dim(gset)[[2]]/5, height=6)
 # par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
-# title <- paste ("GSE56772", '/', annotation(gset), " selected samples", sep ='')
+# title <- paste ("GSE57583", '/', annotation(gset), " selected samples", sep ='')
 # boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
 # legend("topleft", labels, fill=palette(), bty="n")
