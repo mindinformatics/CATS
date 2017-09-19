@@ -3,9 +3,7 @@
 setwd("~/Desktop/CATS/GEO2R/GSE9566_Barres/GPL1261/")
 
 # Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Mon Sep 18 11:19:22 EDT 2017
 
-################################################################
 #   Differential expression analysis with limma
 library(Biobase)
 library(GEOquery)
@@ -48,34 +46,3 @@ tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
 write.table(tT, file="Results/GSE9566_Barres_Oligodendrocytes.csv", row.names=F, sep=",")
-
-# ################################################################
-# #   Boxplot for selected GEO samples
-# library(Biobase)
-# library(GEOquery)
-# 
-# # load series and platform data from GEO
-# 
-# gset <- getGEO("GSE9566", GSEMatrix =TRUE, getGPL=FALSE)
-# if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
-# gset <- gset[[idx]]
-# 
-# # group names for all samples in a series
-# gsms <- "00000001111111111111111111100011111111"
-# sml <- c()
-# for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
-# sml <- paste("G", sml, sep="")  set group names
-# 
-# # order samples by group
-# ex <- exprs(gset)[ , order(sml)]
-# sml <- sml[order(sml)]
-# fl <- as.factor(sml)
-# labels <- c("Case","Control")
-# 
-# # set parameters and draw the plot
-# palette(c("#f4dfdf","#dfeaf4", "#AABBCC"))
-# dev.new(width=4+dim(gset)[[2]]/5, height=6)
-# par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
-# title <- paste ("GSE9566", '/', annotation(gset), " selected samples", sep ='')
-# boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
-# legend("topleft", labels, fill=palette(), bty="n")

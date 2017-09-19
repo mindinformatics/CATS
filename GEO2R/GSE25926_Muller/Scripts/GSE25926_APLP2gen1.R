@@ -1,8 +1,8 @@
-# Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Fri Sep 15 11:34:19 EDT 2017
+# Control: 3 Wild Type
+# Case: APLP2 backcrossed 1 generation
 
-setwd("~/Desktop/CATS/GEO2R/GSE25926_Muller/")
-################################################################
+# Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
+
 #   Differential expression analysis with limma
 library(Biobase)
 library(GEOquery)
@@ -50,49 +50,4 @@ tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
 
-# take only rows with Gene Symbols and Names == Remove probes that dont match to gene (according to GPl)
-
-# check number of probes that don't match to genes
-#table(tT$Gene.title!="")
-
-# only take rows w/ Gene Symbols and Names == Remove probes that dont match to gene (according to GPl)
-#tT <- tT[tT$Gene.symbol!="" & tT$Gene.title!="",]
-
-write.table(tT, file="Results/GSE25926_Aydin_APLP2gen1vsWT.csv", row.names=F, sep="\t")
-
-
-# ################################################################
-# #   Boxplot for selected GEO samples
-# library(Biobase)
-# library(GEOquery)
-# 
-# # load series and platform data from GEO
-# 
-# gset <- getGEO("GSE25926", GSEMatrix =TRUE, getGPL=FALSE)
-# if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
-# gset <- gset[[idx]]
-# 
-# # group names for all samples in a series
-# gsms <- "000XXXXXXXXX111"
-# sml <- c()
-# for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
-# sml <- paste("G", sml, sep="")  set group names
-# 
-# # eliminate samples marked as "X"
-# sel <- which(sml != "X")
-# sml <- sml[sel]
-# gset <- gset[ ,sel]
-# 
-# # order samples by group
-# ex <- exprs(gset)[ , order(sml)]
-# sml <- sml[order(sml)]
-# fl <- as.factor(sml)
-# labels <- c("Control","Case")
-# 
-# # set parameters and draw the plot
-# palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
-# dev.new(width=4+dim(gset)[[2]]/5, height=6)
-# par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
-# title <- paste ("GSE25926", '/', annotation(gset), " selected samples", sep ='')
-# boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
-# legend("topleft", labels, fill=palette(), bty="n")
+write.table(tT, file="Results/GSE25926_APLP2gen1vsWT.csv", row.names=F, sep=",")

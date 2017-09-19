@@ -2,10 +2,7 @@
 # case: 5 TTA mice CA1
 
 # Version info: R 3.2.3, Biobase 2.30.0, GEOquery 2.40.0, limma 3.26.8
-# R scripts generated  Mon Sep 18 15:24:14 EDT 2017
 
-setwd("~/Desktop/CATS/GEO2R/GSE57583_BMS/")
-################################################################
 #   Differential expression analysis with limma
 library(Biobase)
 library(GEOquery)
@@ -53,40 +50,3 @@ tT <- topTable(fit2, adjust="fdr", sort.by="B", number=10e10)
 
 tT <- subset(tT, select=c("ID","adj.P.Val","P.Value","t","B","logFC","Gene.symbol","Gene.title"))
 write.table(tT, file="Results/GSE57583_TTAaloneDN_CA1.csv", row.names=F, sep=",")
-
-
-# ################################################################
-# #   Boxplot for selected GEO samples
-# library(Biobase)
-# library(GEOquery)
-# 
-# # load series and platform data from GEO
-# 
-# gset <- getGEO("GSE57583", GSEMatrix =TRUE, getGPL=FALSE)
-# if (length(gset) > 1) idx <- grep("GPL8759", attr(gset, "names")) else idx <- 1
-# gset <- gset[[idx]]
-# 
-# # group names for all samples in a series
-# gsms <- "000000XXXXXXXXXXXXXXXXXXXXXXXXXXXX11111XXXXXXXXXX"
-# sml <- c()
-# for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
-# sml <- paste("G", sml, sep="")  set group names
-# 
-# # eliminate samples marked as "X"
-# sel <- which(sml != "X")
-# sml <- sml[sel]
-# gset <- gset[ ,sel]
-# 
-# # order samples by group
-# ex <- exprs(gset)[ , order(sml)]
-# sml <- sml[order(sml)]
-# fl <- as.factor(sml)
-# labels <- c("Control","Case")
-# 
-# # set parameters and draw the plot
-# palette(c("#dfeaf4","#f4dfdf", "#AABBCC"))
-# dev.new(width=4+dim(gset)[[2]]/5, height=6)
-# par(mar=c(2+round(max(nchar(sampleNames(gset)))/2),4,2,1))
-# title <- paste ("GSE57583", '/', annotation(gset), " selected samples", sep ='')
-# boxplot(ex, boxwex=0.6, notch=T, main=title, outline=FALSE, las=2, col=fl)
-# legend("topleft", labels, fill=palette(), bty="n")
