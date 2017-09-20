@@ -1,0 +1,10 @@
+GSE _ brain region _ Labname _ platform _ contrast
+
+	
+
+Analysis file naming
+	GSE Labname Peturbation
+	
+
+# To run d3 visualization 
+python -m SimpleHTTPServer
